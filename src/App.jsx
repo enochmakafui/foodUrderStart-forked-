@@ -1,17 +1,32 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import Header from "./components/Header";
+import Products from "./components/Product";
 
 function App() {
+  const [mealData, setMealData] = useState();
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
-    fetch("http://localhost:3000/meals")
-      .then((res) => res.json())
-      .then((data) => console.log(data));
+    async function fetchMeals() {
+      setIsLoading(true);
+      try {
+        const response = await fetch("http://localhost:3000/meals");
+        const resData = await response.json();
+        console.log(resData);
+        setMealData(resData);
+      } catch (error) {
+        console.log(error);
+      }
+      setIsLoading(false);
+    }
+
+    fetchMeals();
   }, []);
 
   return (
     <>
-      <h1>You got this 💪</h1>
-      <p>Stuck? Not sure how to proceed?</p>
-      <p>Don't worry - we've all been there. Let's build it together!</p>
+      <Header />
+      <Products mealData={mealData} isLoading={isLoading} />
     </>
   );
 }
