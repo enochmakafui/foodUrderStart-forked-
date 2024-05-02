@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
 import Header from "./components/Header";
 import Products from "./components/Product";
+import CartContextProvider from "./store/CartContext";
+import Modal from "./components/Modal";
+import Cart from "./components/Cart";
 
 function App() {
   const [mealData, setMealData] = useState();
   const [isLoading, setIsLoading] = useState(false);
+  const [showCart, setShowCart] = useState(false);
 
   useEffect(() => {
     async function fetchMeals() {
@@ -12,7 +16,6 @@ function App() {
       try {
         const response = await fetch("http://localhost:3000/meals");
         const resData = await response.json();
-        console.log(resData);
         setMealData(resData);
       } catch (error) {
         console.log(error);
@@ -23,10 +26,24 @@ function App() {
     fetchMeals();
   }, []);
 
+  function handleShowModal() {
+    setShowCart(!showCart);
+  }
+  function handleCloseModal() {
+    setShowCart(false);
+  }
+
   return (
     <>
-      <Header />
-      <Products mealData={mealData} isLoading={isLoading} />
+      <CartContextProvider>
+        {showCart && (
+          <Modal open={showCart} onClose={handleCloseModal}>
+            <Cart onCloseModal={handleShowModal} />
+          </Modal>
+        )}
+        <Header showCart={handleShowModal} />
+        <Products mealData={mealData} isLoading={isLoading} />
+      </CartContextProvider>
     </>
   );
 }
