@@ -12,7 +12,6 @@ export default function Header({ showCart }) {
       <button
         onClick={() => {
           showCart();
-          console.log("clicked");
         }}
       >
         {orderItems.length > 0 ? `Cart (${orderItems.length})` : "Cart"}

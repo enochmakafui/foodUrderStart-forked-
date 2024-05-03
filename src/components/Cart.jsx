@@ -1,17 +1,14 @@
 import { useContext } from "react";
 import { CartContext } from "../store/CartContext";
 
-export default function Cart({ onCloseModal }) {
+export default function Cart({ onCloseModal, showCheckOut }) {
   const { orderItems, removeFromCart, increaseItemQuantity } =
     useContext(CartContext);
-  function calculateItemTotal(order) {
-    const price = parseFloat(order.price);
-    return order.quantity * price;
-  }
 
   const totalPrice = orderItems.reduce((total, order) => {
-    return total + calculateItemTotal(order);
+    return total + parseFloat(order.price) * order.quantity;
   }, 0);
+
   return (
     <div className="cart">
       <h2>Your Cart</h2>
@@ -20,7 +17,7 @@ export default function Cart({ onCloseModal }) {
         <ul key={order.id} className="cart-item">
           <li>
             <p>
-              {order.name} - {order.quantity} x ${order.quantity * order.price}
+              {order.name} - {order.quantity} x ${order.price}
             </p>
           </li>
           <li className="cart-item-actions">
@@ -35,7 +32,15 @@ export default function Cart({ onCloseModal }) {
         <button className="text-button" onClick={() => onCloseModal()}>
           close
         </button>
-        <button className="button">Go to checkout</button>
+        <button
+          className="button"
+          onClick={() => {
+            onCloseModal();
+            showCheckOut();
+          }}
+        >
+          Go to checkout
+        </button>
       </div>
     </div>
   );
