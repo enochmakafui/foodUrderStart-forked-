@@ -60,12 +60,25 @@ function cartReducer(state, action) {
       };
     }
   }
+  if (action.type === "CLEAR_ITEM") {
+    return {
+      orders: [],
+    };
+  }
 }
 
 export default function CartContextProvider({ children }) {
   const [cartState, cartDispatch] = useReducer(cartReducer, {
     orders: [],
   });
+
+  const totalPrice =
+    cartState.orders.length > 0
+      ? cartState.orders.reduce((total, order) => {
+          return total + order.quantity * parseFloat(order.price);
+        }, 0)
+      : 0;
+
   function handleAddItemToCart(meal) {
     cartDispatch({
       type: "ADD_ITEM",
@@ -84,11 +97,18 @@ export default function CartContextProvider({ children }) {
       id: id,
     });
   }
+  function handleClearCart() {
+    cartDispatch({
+      type: "CLEAR_ITEM",
+    });
+  }
   const ctxValues = {
     orderItems: cartState.orders,
     addToCart: handleAddItemToCart,
     removeFromCart: handleDeleteFromCart,
     increaseItemQuantity: handleIncreaseItemQuantity,
+    totalPrice: totalPrice,
+    clearCart: handleClearCart,
   };
   return (
     <CartContext.Provider value={ctxValues}>{children}</CartContext.Provider>

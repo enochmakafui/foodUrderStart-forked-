@@ -1,8 +1,12 @@
+import { useContext } from "react";
+import { CartContext } from "../store/CartContext";
+
 export default function CheckOut({ onClose, showDone }) {
+  const { totalPrice, clearCart } = useContext(CartContext);
   return (
     <div>
       <h2>Checkout</h2>
-      <p>Total Amount</p>
+      <p>Total Amount: ${totalPrice.toFixed(2)}</p>
       <form className="control">
         <label htmlFor="name">Full Name</label>
         <input type="text" placeholder="John Doe" required />
@@ -30,6 +34,7 @@ export default function CheckOut({ onClose, showDone }) {
           onClick={() => {
             onClose();
             showDone();
+            clearCart();
           }}
           type="Submit"
         >

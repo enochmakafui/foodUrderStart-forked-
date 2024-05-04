@@ -4,11 +4,7 @@ import { CartContext } from "../store/CartContext";
 export default function Cart({ onCloseModal, showCheckOut }) {
   const { orderItems, removeFromCart, increaseItemQuantity } =
     useContext(CartContext);
-
-  const totalPrice = orderItems.reduce((total, order) => {
-    return total + parseFloat(order.price) * order.quantity;
-  }, 0);
-
+  const { totalPrice } = useContext(CartContext);
   return (
     <div className="cart">
       <h2>Your Cart</h2>
