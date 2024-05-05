@@ -8,29 +8,13 @@ import CheckOut from "./components/CheckOut";
 import OrderSubmit from "./components/orderSubmit";
 import { fetchMealData } from "./http";
 import { useFetch } from "./hooks/useFetch";
+import Error from "./components/Error";
 
 function App() {
-  // const [mealData, setMealData] = useState();
-  // const [isLoading, setIsLoading] = useState(false);
   const [showCart, setShowCart] = useState(false);
   const [showCheckOut, setShowCheckOut] = useState(false);
   const [showOrderComplete, setShowOrderComplete] = useState(false);
-  const { fetchedData, isLoading } = useFetch(fetchMealData);
-
-  // useEffect(() => {
-  //   async function fetchMeals() {
-  //     setIsLoading(true);
-  //     try {
-  //       const data = await fetchMealData();
-  //       setMealData(data);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //     setIsLoading(false);
-  //   }
-
-  //   fetchMeals();
-  // }, []);
+  const { fetchedData, isLoading, error, setError } = useFetch(fetchMealData);
 
   function handleShowModal() {
     setShowCart(!showCart);
@@ -43,6 +27,20 @@ function App() {
   }
   function handleShowOrderComplete() {
     setShowOrderComplete(!showOrderComplete);
+  }
+  function handleError() {
+    setError();
+  }
+  if (error) {
+    return (
+      <Modal open={true}>
+        <Error
+          title="An error occured "
+          message={error.message}
+          onClose={handleError}
+        />
+      </Modal>
+    );
   }
   return (
     <>

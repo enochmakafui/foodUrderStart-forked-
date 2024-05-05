@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 export function useFetch(fetchFn) {
   const [fetchedData, setFetchedData] = useState();
   const [isLoading, setIsLoading] = useState();
+  const [error, setError] = useState();
   useEffect(() => {
     async function fetchMeals() {
       setIsLoading(true);
@@ -10,7 +11,7 @@ export function useFetch(fetchFn) {
         const data = await fetchFn();
         setFetchedData(data);
       } catch (error) {
-        console.log(error);
+        setError({ message: error.message || "Could not fetch meal data" });
       }
       setIsLoading(false);
     }
@@ -20,5 +21,7 @@ export function useFetch(fetchFn) {
   return {
     fetchedData,
     isLoading,
+    error,
+    setError,
   };
 }

@@ -13,12 +13,14 @@ function cartReducer(state, action) {
     );
     if (itemExists) {
       return {
+        ...state,
         orders: state.orders,
       };
     }
-    action.meal.quantity = 1;
-    const updatedOrders = [...state.orders, action.meal];
+    const updatedmeal = { ...action.meal, quantity: 1 };
+    const updatedOrders = [...state.orders, updatedmeal];
     return {
+      ...state,
       orders: updatedOrders,
     };
   }
@@ -33,6 +35,7 @@ function cartReducer(state, action) {
       return order;
     });
     return {
+      ...state,
       orders: updatedOrders,
     };
   }
@@ -43,6 +46,7 @@ function cartReducer(state, action) {
         (order) => order.id !== action.id,
       );
       return {
+        ...state,
         orders: updatedOrders,
       };
     } else if (item) {
@@ -56,15 +60,18 @@ function cartReducer(state, action) {
         return order;
       });
       return {
+        ...state,
         orders: updatedOrders,
       };
     }
   }
   if (action.type === "CLEAR_ITEM") {
     return {
+      ...state,
       orders: [],
     };
   }
+  return state;
 }
 
 export default function CartContextProvider({ children }) {
